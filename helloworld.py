@@ -10,7 +10,7 @@ import ImageFont
 RST = 24
 
 #128x64 display with hardware I2C
-disp = Adafruit_SSD1306.Adafruit_SSD1306_128_64(rst=RST, i2c_address=0x3D)
+disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
 
 #Initialise library
 disp.begin()
@@ -36,3 +36,5 @@ draw.text((2,2), 'Hello World!', font=font, fill=255)
 IP_Address = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
 draw.text((2,22), IP_Address, font=font, fill=255)
 
+disp.image(image)
+disp.display()
