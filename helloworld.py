@@ -51,8 +51,11 @@ font = ImageFont.truetype('Minecraftia-Regular.ttf',8)
 loopTime = time.time()
 while 1:
 
-	if time.time() - loopTime > 2:
+	if time.time() - loopTime > 1:
 
+ 		image = Image.new('1', (width,height))
+		draw=ImageDraw.Draw(image)
+		
 		draw.text((2,2), 'Hello World!', font=font, fill=255)
 		#IP_Address = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
 		#draw.text((2,22), IP_Address, font=font, fill=255)
