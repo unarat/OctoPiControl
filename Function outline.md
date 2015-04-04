@@ -29,4 +29,7 @@ once per second, get status / data
 
 if printer status = printing, disable controls, else poll selectors and update display
 
-callbacks for button presses.
+callbacks for button presses - take current values for axis and multiplier, build request for octoprint
+
+led status for buttons? on event changes
+
