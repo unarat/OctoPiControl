@@ -19,38 +19,38 @@ def my_callback(channel):
 	ButtonState = not ButtonState
 
 while 1:
-GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
+	GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
 
 
-#128x64 display with hardware I2C
-disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
+	#128x64 display with hardware I2C
+	disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
 
-#Initialise library
-disp.begin()
+	#Initialise library
+	disp.begin()
 
-#Clear display
-disp.clear()
-disp.display()
+	#Clear display
+	disp.clear()
+	disp.display()
 
-#Create blank image for drawing
-width = disp.width
-height = disp.height
-image = Image.new('1', (width, height))
+	#Create blank image for drawing
+	width = disp.width
+	height = disp.height
+	image = Image.new('1', (width, height))
 
-#Get drawing object to draw on image
-draw = ImageDraw.Draw(image)
-draw.rectangle((0,0,width,height), outline=0, fill=0)
+	#Get drawing object to draw on image
+	draw = ImageDraw.Draw(image)
+	draw.rectangle((0,0,width,height), outline=0, fill=0)
 
-#load default font
+	#load default font
 
-#font = ImageFont.load_default()
+	#font = ImageFont.load_default()
 
-font = ImageFont.truetype('Minecraftia-Regular.ttf',8)
+	font = ImageFont.truetype('Minecraftia-Regular.ttf',8)
 
-draw.text((2,2), 'Hello World!', font=font, fill=255)
-#IP_Address = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
-#draw.text((2,22), IP_Address, font=font, fill=255)
-draw.text((2,22), 'Button is '+ str(ButtonState), font=font, fill=255)
+	draw.text((2,2), 'Hello World!', font=font, fill=255)
+	#IP_Address = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
+	#draw.text((2,22), IP_Address, font=font, fill=255)
+	draw.text((2,22), 'Button is '+ str(ButtonState), font=font, fill=255)
 
-disp.image(image)
-disp.display()
+	disp.image(image)
+	disp.display()
