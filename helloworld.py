@@ -11,13 +11,16 @@ import RPi.GPIO as GPIO
 #Raspberry pi pin configurations
 RST = 24
 BUTTON= 21
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 ButtonState = False
 
-GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
-
 def my_callback(channel):
 	ButtonState = not ButtonState
+
+while 1:
+GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
+
 
 #128x64 display with hardware I2C
 disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
