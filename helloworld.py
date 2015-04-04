@@ -16,12 +16,16 @@ GPIO.setup(BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 ButtonState = False
 
 def my_callback(channel):
+	global ButtonState
 	ButtonState = not ButtonState
+	print('button pressed, new state is ' + str(ButtonState))	
 
+GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
+
+loopTime = time.time()
 while 1:
-	GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
 
-
+	if time.time() - loopTime > 2:
 	#128x64 display with hardware I2C
 	disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
 
@@ -54,3 +58,5 @@ while 1:
 
 	disp.image(image)
 	disp.display()
+	
+	loopTime = time.time()
