@@ -6,8 +6,18 @@ import Image
 import ImageDraw
 import ImageFont
 
+import RPi.GPIO as GPIO
+
 #Raspberry pi pin configurations
 RST = 24
+BUTTON= 21
+GPIO.setup(BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+ButtonState = False
+
+GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
+
+def my_callback(channel):
+	ButtonState = not ButtonState
 
 #128x64 display with hardware I2C
 disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
@@ -33,8 +43,9 @@ draw.rectangle((0,0,width,height), outline=0, fill=0)
 font = ImageFont.load_default()
 
 draw.text((2,2), 'Hello World!', font=font, fill=255)
-IP_Address = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
-draw.text((2,22), IP_Address, font=font, fill=255)
+#IP_Address = [(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
+#draw.text((2,22), IP_Address, font=font, fill=255)
+draw.text((2,22), 'Button is '+ str(ButtonState), font=font, fill=255)
 
 disp.image(image)
 disp.display()
