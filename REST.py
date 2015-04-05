@@ -11,15 +11,16 @@ apiurl = "http://192.168.1.200:5000/api"
 apikey = "2AE19BC0BE0C4E7296B03325DF2C4489"
 
 #uri = apiurl + "/printer?exclude=temperature,sd"
-uri = apiurl + "/state"
+#uri = apiurl + "/state"
 headers = { 'Content-type': 'application/json', 'X-Api-Key': apikey }
-r = requests.get(uri, headers=headers)
+#r = requests.get(uri, headers=headers)
 #print(r)
-j = r.json()
+#j = r.json()
 
-print(j['state']['stateString'])
-print(j)
 
-#uri = apiurl + "/printer/printhead"
-#body = { 'command': 'home', 'axes': ["x","y"] }
-#r = requests.post(uri, headers=headers, data=json.dumps(body))
+#print(j['state']['stateString'])
+#print(j)
+SelectedAxis = 'x'
+uri = apiurl + "/printer/printhead"
+body = { 'command': 'home', 'axes': [SelectedAxis] }
+r = requests.post(uri, headers=headers, data=json.dumps(body))
