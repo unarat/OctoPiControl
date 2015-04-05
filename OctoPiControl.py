@@ -109,6 +109,21 @@ def HomeButtonCallback(channel):
 
 GPIO.add_event_detect(HOME_BUTTON, GPIO.RISING, callback=HomeButtonCallback, bouncetime=300)
 
+def ReadAxis():
+	global SelectedAxis
+	if GPIO.input(INPUT_X_AXIS):
+		SelectedAxis = 'x'
+	elif GPIO.input(INPUT_Y_AXIS):
+		SelectedAxis = 'y'
+	elif GPIO.input(INPUT_Z_AXIS):
+		SelectedAxis = 'z'
+	else:
+		SelectedAxis = 'e'
+
+	INPUT_X_AXIS = 23
+INPUT_Y_AXIS = 24
+INPUT_Z_AXIS = 25
+INPUT_E = 5
 
 loopTime = time.time()
 while 1:
@@ -140,7 +155,9 @@ while 1:
 		
 		disp.image(image)
 		disp.display()
-
+		
+		ReadAxis()
+		print(SelectedAxis)
 		#Alphanumeric display
 		ANDisplay.print_str('TEST')
 		ANDisplay.write_display()
