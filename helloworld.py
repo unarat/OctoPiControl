@@ -71,8 +71,10 @@ while 1:
 		disp.image(image)
 		disp.display()
 
-		ANDisplay.printstr(str(ButtonState))
+		ANDisplay.print_str(str(ButtonState))
 		ANDisplay.write_display()
 		
 
 		loopTime = time.time()
+
+GPIO.cleanup()
