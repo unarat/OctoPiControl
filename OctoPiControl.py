@@ -107,6 +107,7 @@ def HomeButtonCallback(channel):
 	body = { 'command': 'home', 'axes': ["x","y"] }
 	r = requests.post(uri, headers=headers, data=json.dumps(body))
 
+
 GPIO.add_event_detect(HOME_BUTTON, GPIO.RISING, callback=HomeButtonCallback, bouncetime=300)
 
 def ReadAxis():
@@ -119,11 +120,6 @@ def ReadAxis():
 		SelectedAxis = 'z'
 	else:
 		SelectedAxis = 'e'
-
-	INPUT_X_AXIS = 23
-INPUT_Y_AXIS = 24
-INPUT_Z_AXIS = 25
-INPUT_E = 5
 
 loopTime = time.time()
 while 1:
@@ -157,9 +153,8 @@ while 1:
 		disp.display()
 		
 		ReadAxis()
-		print(SelectedAxis)
 		#Alphanumeric display
-		ANDisplay.print_str('TEST')
+		ANDisplay.print_str(SelectedAxis.upper())
 		ANDisplay.write_display()
 		
 		loopTime = time.time()
