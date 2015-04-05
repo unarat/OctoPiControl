@@ -102,19 +102,20 @@ ANDisplay.begin()
 ANDisplay.clear()
 
 
-def my_callback(channel):
-	global ButtonState
-	ButtonState = not ButtonState
-	print('UP_BUTTON pressed, new state is ' + str(ButtonState))	
+def HomeButtonCallback(channel):
+	uri = apiurl + "/printer/printhead"
+	body = { 'command': 'home', 'axes': ["x","y"] }
+	r = requests.post(uri, headers=headers, data=json.dumps(body))
 
-GPIO.add_event_detect(UP_BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
+GPIO.add_event_detect(HOME_BUTTON, GPIO.RISING, callback=HomeButtonCallback, bouncetime=300)
+
 
 loopTime = time.time()
 while 1:
 
 	if time.time() - loopTime > 1:
 
-		#get printer statue
+		#get printer status for OLED display
 		uri = apiurl + "/state"
 		headers = { 'Content-type': 'application/json', 'X-Api-Key': apikey }
 		r = requests.get(uri, headers=headers)
@@ -140,6 +141,7 @@ while 1:
 		disp.image(image)
 		disp.display()
 
+		#Alphanumeric display
 		ANDisplay.print_str('TEST')
 		ANDisplay.write_display()
 		
