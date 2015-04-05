@@ -1,7 +1,7 @@
 import socket
 import time
 import Adafruit_SSD1306
-
+from Adafruit_LED_Backpack import AlphaNum4
 import Image
 import ImageDraw
 import ImageFont
@@ -21,6 +21,8 @@ def my_callback(channel):
 	print('button pressed, new state is ' + str(ButtonState))	
 
 GPIO.add_event_detect(BUTTON, GPIO.RISING, callback=my_callback, bouncetime=300)
+
+#=====OLED display configuration
 
 #128x64 display with hardware I2C
 disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3D)
@@ -42,10 +44,15 @@ draw = ImageDraw.Draw(image)
 draw.rectangle((0,0,width,height), outline=0, fill=0)
 
 #load default font
-
 #font = ImageFont.load_default()
 
 font = ImageFont.truetype('Minecraftia-Regular.ttf',8)
+
+#=====AlphaNumeric Display setup
+ANDisplay = AlphaNum4.AlphaNum4()
+
+ANDisplay.begin()
+ANDisplay.clear()
 
 
 loopTime = time.time()
@@ -63,5 +70,9 @@ while 1:
 
 		disp.image(image)
 		disp.display()
+
+		ANDisplay.printstr(str(ButtonState))
+		ANDisplay.write_display()
 		
+
 		loopTime = time.time()
