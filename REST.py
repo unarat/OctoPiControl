@@ -17,9 +17,9 @@ r = requests.get(uri, headers=headers)
 #print(r)
 j = r.json()
 
-#print(j['state']['stateString'])
+print(j['state']['stateString'])
 print(j)
 
-uri = apiurl + "/printer/printhead"
-body = { 'command': 'home', 'axes': ["x","y"] }
-r = requests.post(uri, headers=headers, data=json.dumps(body))
+#uri = apiurl + "/printer/printhead"
+#body = { 'command': 'home', 'axes': ["x","y"] }
+#r = requests.post(uri, headers=headers, data=json.dumps(body))
