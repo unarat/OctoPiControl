@@ -101,6 +101,19 @@ ANDisplay = AlphaNum4.AlphaNum4()
 ANDisplay.begin()
 ANDisplay.clear()
 
+<<<<<<< HEAD
+=======
+
+def HomeButtonCallback(channel):
+	ReadAxis()
+	uri = apiurl + "/printer/printhead"
+	body = { 'command': 'home', 'axes': [SelectedAxis] }
+	r = requests.post(uri, headers=headers, data=json.dumps(body))
+
+
+GPIO.add_event_detect(HOME_BUTTON, GPIO.RISING, callback=HomeButtonCallback, bouncetime=300)
+
+>>>>>>> 76f76bba8e6561eb29535e9347c2be70efd09b5a
 def ReadAxis():
 	global SelectedAxis
 	if GPIO.input(INPUT_X_AXIS):
