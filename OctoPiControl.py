@@ -118,11 +118,13 @@ while 1:
 		uri = apiurl + "/state"
 		headers = { 'Content-type': 'application/json', 'X-Api-Key': apikey }
 		r = requests.get(uri, headers=headers)
-		PrinterStatus = j['state']['stateString']
-		BedTempActual =j['temperatures']['bed']['actual']
- 		BedTempTarget =j['temperatures']['bed']['target']
- 		HotEndTempActual = j['temperatures']['tool0']['actual']
- 		HotEndTempTarget = j['temperatures']['tool0']['target']
+		j = r.json()
+
+		PrinterStatus = str(j['state']['stateString'])
+		BedTempActual = str(j['temperatures']['bed']['actual'])
+ 		BedTempTarget = str(j['temperatures']['bed']['target'])
+ 		HotEndTempActual = str(j['temperatures']['tool0']['actual'])
+ 		HotEndTempTarget = str(j['temperatures']['tool0']['target'])
 
 
  		image = Image.new('1', (width,height))
