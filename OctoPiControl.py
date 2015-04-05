@@ -103,8 +103,9 @@ ANDisplay.clear()
 
 
 def HomeButtonCallback(channel):
+	ReadAxis()
 	uri = apiurl + "/printer/printhead"
-	body = { 'command': 'home', 'axes': ["x","y"] }
+	body = { 'command': 'home', 'axes': [SelectedAxis] }
 	r = requests.post(uri, headers=headers, data=json.dumps(body))
 
 
