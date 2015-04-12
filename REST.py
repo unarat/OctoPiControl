@@ -22,5 +22,7 @@ headers = { 'Content-type': 'application/json', 'X-Api-Key': apikey }
 #print(j)
 SelectedAxis = 'x'
 uri = apiurl + "/printer/printhead"
-body = { 'command': 'home', 'axes': [SelectedAxis] }
+#body = { 'command': 'home', 'axes': 'x' }
+body = { 'command': 'jog', 'x': 10, 'y':-10}
 r = requests.post(uri, headers=headers, data=json.dumps(body))
+print body

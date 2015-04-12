@@ -5,6 +5,7 @@ from Adafruit_LED_Backpack import AlphaNum4
 import Image
 import ImageDraw
 import ImageFont
+import os
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 
@@ -67,8 +68,6 @@ GPIO.setup(HOME_LED, GPIO.OUT)
 GPIO.setup(DOWN_LED, GPIO.OUT)
 GPIO.setup(CONNECT_LED, GPIO.OUT)
 
-
-
 #=====OLED display configuration
 
 #128x64 display with hardware I2C
@@ -101,21 +100,22 @@ ANDisplay = AlphaNum4.AlphaNum4()
 ANDisplay.begin()
 ANDisplay.clear()
 
-<<<<<<< HEAD
-=======
-
-def HomeButtonCallback(channel):
-	ReadAxis()
-	uri = apiurl + "/printer/printhead"
-	body = { 'command': 'home', 'axes': [SelectedAxis] }
-	r = requests.post(uri, headers=headers, data=json.dumps(body))
-
-
-GPIO.add_event_detect(HOME_BUTTON, GPIO.RISING, callback=HomeButtonCallback, bouncetime=300)
-
->>>>>>> 76f76bba8e6561eb29535e9347c2be70efd09b5a
+#=====Button functions
 def ReadAxis():
 	global SelectedAxis
+	if GPIO.input(INPUT_SCALE_1):
+		SelectedScale = 0.1
+	elif GPIO.input(INPUT_SCALE_2):
+		SelectedScale = 1
+	elif GPIO.input(INPUT_SCALE_3):
+		SelectedScale = 10
+	elif GPIO.input(INPUT_SCALE_4)
+		SelectedScale = 100
+	else:
+		SelectedScale = 1
+
+def ReadScale():
+	global SelectedScale
 	if GPIO.input(INPUT_X_AXIS):
 		SelectedAxis = 'x'
 	elif GPIO.input(INPUT_Y_AXIS):
@@ -128,15 +128,47 @@ def ReadAxis():
 def HomeButtonCallback(channel):
 	ReadAxis()
 	uri = apiurl + "/printer/printhead"
-	body = { 'command': 'home', 'axes': [SelectedAxis] }
+	if SelectedAxis = 'e'
+		GPIO.output(HOME_LED, 0)
+		return
+	else:
+		GPIO.output(HOME_LED, 1)
+		body = { 'command': 'home', 'axes': SelectedAxis }
 	r = requests.post(uri, headers=headers, data=json.dumps(body))
 
+def UpButtonCallback(channel):
+	ReadAxis()
+	ReadScale()
+	body = { 'command': 'jog', 'X-Api-Key': apikey }
+	uri = apiurl + "/printer/printhead"
+	if SelectedAxis = 'e':
+		body = { 'command': 'extrude', 'amount' : SelectedScale }
+	else:
+		body = { 'command': 'home', SelectedAxis : SelectedScale }
+	r = requests.post(uri, headers=headers, data=json.dumps(body))
+
+def DownButtonCallback(channel):
+	ReadAxis()
+	ReadScale()
+	body = { 'command': 'jog', 'X-Api-Key': apikey }
+	uri = apiurl + "/printer/printhead"
+	if SelectedAxis = 'e':
+		body = { 'command': 'extrude', 'amount' : -SelectedScale }
+	else:
+		body = { 'command': 'home', SelectedAxis : -SelectedScale }
+	r = requests.post(uri, headers=headers, data=json.dumps(body))
+
+#=====LED output
+GPIO.output(HOME_LED, 1)
+GPIO.output(UP_LED, 1)
+GPIO.output(DOWN_LED, 1)
 
 GPIO.add_event_detect(HOME_BUTTON, GPIO.RISING, callback=HomeButtonCallback, bouncetime=300)
-
-
+GPIO.add_event_detect(UP_BUTTON, GPIO.RISING, callback=UpButtonCallback, bouncetime=300)
+GPIO.add_event_detect(DOWN_BUTTON, GPIO.RISING, callback=DownButtonCallback, bouncetime=300)
 
 loopTime = time.time()
+
 while 1:
 
 	if time.time() - loopTime > 1:
@@ -153,10 +185,8 @@ while 1:
  		HotEndTempActual = str(j['temperatures']['tool0']['actual'])
  		HotEndTempTarget = str(j['temperatures']['tool0']['target'])
 
-
  		image = Image.new('1', (width,height))
 		draw=ImageDraw.Draw(image)
-		
 		
 		draw.text((1,1), 'Printer State: ' + PrinterStatus, font=font, fill=255)
 		draw.text((1,11), 'Hot End Temp: ' + HotEndTempActual +"/"+HotEndTempTarget, font=font, fill=255)
@@ -168,8 +198,9 @@ while 1:
 		disp.display()
 		
 		ReadAxis()
+		ReadScale()
 		#Alphanumeric display
-		ANDisplay.print_str(SelectedAxis.upper())
+		ANDisplay.print_str(SelectedAxis.upper()+SelectedScale.rjust(3," "))
 		ANDisplay.write_display()
 		
 		loopTime = time.time()
