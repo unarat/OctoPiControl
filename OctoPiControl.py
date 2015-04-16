@@ -62,6 +62,7 @@ GPIO.setup(INPUT_SCALE_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(INPUT_SCALE_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(INPUT_SCALE_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(INPUT_SCALE_4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+#add hot end heater switch?
 
 GPIO.setup(UP_LED, GPIO.OUT)
 GPIO.setup(HOME_LED, GPIO.OUT)
@@ -101,7 +102,7 @@ ANDisplay.begin()
 ANDisplay.clear()
 
 #=====Button functions
-def ReadAxis():
+def ReadScale():
 	global SelectedAxis
 	if GPIO.input(INPUT_SCALE_1):
 		SelectedScale = 0.1
@@ -114,25 +115,27 @@ def ReadAxis():
 	else:
 		SelectedScale = 1
 
-def ReadScale():
+def ReadAxis():
 	global SelectedScale
 	if GPIO.input(INPUT_X_AXIS):
 		SelectedAxis = 'x'
+		GPIO.output(HOME_LED, 1)
 	elif GPIO.input(INPUT_Y_AXIS):
 		SelectedAxis = 'y'
+		GPIO.output(HOME_LED, 1)
 	elif GPIO.input(INPUT_Z_AXIS):
 		SelectedAxis = 'z'
+		GPIO.output(HOME_LED, 1)
 	else:
 		SelectedAxis = 'e'
+		GPIO.output(HOME_LED, 0)
 
 def HomeButtonCallback(channel):
 	ReadAxis()
 	uri = apiurl + "/printer/printhead"
 	if SelectedAxis = 'e'
-		GPIO.output(HOME_LED, 0)
 		return
 	else:
-		GPIO.output(HOME_LED, 1)
 		body = { 'command': 'home', 'axes': SelectedAxis }
 	r = requests.post(uri, headers=headers, data=json.dumps(body))
 
@@ -157,6 +160,19 @@ def DownButtonCallback(channel):
 	else:
 		body = { 'command': 'home', SelectedAxis : -SelectedScale }
 	r = requests.post(uri, headers=headers, data=json.dumps(body))
+
+def ConnectButtonCallback(channel):
+	#===update this with correct API call for toggling connection state
+	#===add long press for system shutdown?
+	uri = apiurl + "/printer/printhead"
+	body = { 'command': 'home', 'axes': SelectedAxis }
+	r = requests.post(uri, headers=headers, data=json.dumps(body))
+
+def CheckConnectionStatus():
+	if PrinterStatus <> "Connected":
+		GPIO.output(CONNECT_LED,0)
+	else:
+		GPIO.output(CONNECT_LED,1)
 
 #=====LED output
 GPIO.output(HOME_LED, 1)
@@ -184,6 +200,7 @@ while 1:
  		BedTempTarget = str(j['temperatures']['bed']['target'])
  		HotEndTempActual = str(j['temperatures']['tool0']['actual'])
  		HotEndTempTarget = str(j['temperatures']['tool0']['target'])
+ 		#===add job progress here?
 
  		image = Image.new('1', (width,height))
 		draw=ImageDraw.Draw(image)
@@ -199,6 +216,7 @@ while 1:
 		
 		ReadAxis()
 		ReadScale()
+
 		#Alphanumeric display
 		ANDisplay.print_str(SelectedAxis.upper()+SelectedScale.rjust(3," "))
 		ANDisplay.write_display()
